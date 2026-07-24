@@ -34,7 +34,58 @@ STEP-5: Display the obtained cipher text.
 
 
 
-Program:
+## Program:
+```
+def key_matrix(key):
+    key = key.upper().replace("J", "I")
+    s = ""
+    for ch in key + "ABCDEFGHIKLMNOPQRSTUVWXYZ":
+        if ch.isalpha() and ch not in s:
+            s += ch
+    return [list(s[i:i+5]) for i in range(0, 25, 5)]
+
+def pos(mat, ch):
+    if ch == "J":
+        ch = "I"
+    for i in range(5):
+        for j in range(5):
+            if mat[i][j] == ch:
+                return i, j
+
+def encrypt(text, mat):
+    text = text.upper().replace("J", "I").replace(" ", "")
+    if len(text) % 2 != 0:
+        text += "X"
+    cipher = ""
+    for i in range(0, len(text), 2):
+        r1, c1 = pos(mat, text[i])
+        r2, c2 = pos(mat, text[i + 1])
+        if r1 == r2:
+            cipher += mat[r1][(c1 + 1) % 5] + mat[r2][(c2 + 1) % 5]
+        elif c1 == c2:
+            cipher += mat[(r1 + 1) % 5][c1] + mat[(r2 + 1) % 5][c2]
+        else:
+            cipher += mat[r1][c2] + mat[r2][c1]
+    return cipher
+
+key = input("Enter key: ")
+plain = input("Enter plain text: ")
+
+matrix = key_matrix(key)
+
+print("\nPlayfair Key Matrix:")
+for row in matrix:
+    print(" ".join(row))
+
+print("\nEncrypted Message:", encrypt(plain, matrix))
+```
+
+## OUTPUT:
+<img width="421" height="321" alt="image" src="https://github.com/user-attachments/assets/2bbe65d6-e5fb-418f-ab57-39d50e3bdbcb" />
+
+
+## RESULT:
+Thus the implementation of playfiar cipher had been executed successfully.
 
 
 
